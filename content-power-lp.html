@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>コンテンツ力診断｜魅力的な人間になるためのワーク</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
+<style>
+  :root{
+    --bg:#0e0d12; --panel:#17151d; --panel2:#1e1c26;
+    --line:#2a2733; --text:#ece9f1; --muted:#9b95a8;
+    --accent:#c8a35b; --accent2:#e0c389; --good:#7bd389; --warn:#e8a04b; --bad:#e06a6a;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI",sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.8; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:0 18px}
+  section{padding:56px 0}
+  h1,h2,h3{line-height:1.4;letter-spacing:.02em}
+  .eyebrow{color:var(--accent);font-size:13px;letter-spacing:.18em;font-weight:700;margin-bottom:12px}
+  .muted{color:var(--muted)}
+
+  /* hero */
+  .hero{padding:72px 0 48px;text-align:center;
+    background:radial-gradient(120% 80% at 50% -10%, rgba(200,163,91,.16), transparent 60%);}
+  .hero h1{font-size:30px;font-weight:800;margin-bottom:18px}
+  .hero h1 b{color:var(--accent2)}
+  .hero p{color:var(--muted);font-size:15px;max-width:520px;margin:0 auto 28px}
+  .badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:30px}
+  .badge{background:var(--panel);border:1px solid var(--line);border-radius:999px;
+    padding:8px 16px;font-size:13px;color:var(--accent2)}
+  .cta{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#1a1500;font-weight:800;text-decoration:none;padding:15px 34px;border-radius:999px;
+    font-size:15px;box-shadow:0 8px 24px rgba(200,163,91,.28);transition:.2s}
+  .cta:hover{transform:translateY(-2px)}
+
+  /* steps nav */
+  .stepnav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 0 8px;
+    position:sticky;top:0;background:rgba(14,13,18,.9);backdrop-filter:blur(8px);
+    padding:12px 0;z-index:20;border-bottom:1px solid var(--line)}
+  .stepnav a{font-size:12.5px;color:var(--muted);text-decoration:none;
+    border:1px solid var(--line);border-radius:999px;padding:6px 13px}
+  .stepnav a:hover{color:var(--accent2);border-color:var(--accent)}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:24px 20px;margin-bottom:18px}
+  h2.title{font-size:22px;font-weight:800;margin-bottom:6px}
+  h2.title span{color:var(--accent)}
+  .lead{color:var(--muted);font-size:14px;margin-bottom:24px}
+
+  .cat{margin-bottom:26px}
+  .cat h3{font-size:16px;color:var(--accent2);margin-bottom:4px;
+    display:flex;justify-content:space-between;align-items:baseline}
+  .cat h3 .sub{font-size:12px;color:var(--muted);font-weight:500}
+  .item{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;
+    padding:11px 0;border-bottom:1px dashed var(--line)}
+  .item label{font-size:14.5px}
+  .scorebox{display:flex;align-items:center;gap:10px}
+  .scorebox input[type=range]{width:120px;accent-color:var(--accent)}
+  .scorebox .val{width:26px;text-align:center;font-weight:700;color:var(--accent2);
+    font-variant-numeric:tabular-nums}
+
+  /* result */
+  .result{position:sticky;bottom:0;background:var(--panel2);border:1px solid var(--accent);
+    border-radius:14px;padding:16px 18px;margin-top:18px;
+    box-shadow:0 -6px 24px rgba(0,0,0,.4)}
+  .result .top{display:flex;justify-content:space-between;align-items:center}
+  .result .score{font-size:34px;font-weight:800;color:var(--accent2);font-variant-numeric:tabular-nums}
+  .result .score small{font-size:15px;color:var(--muted);font-weight:600}
+  .result .band{font-size:15px;font-weight:800;text-align:right}
+  .result .desc{font-size:13px;color:var(--muted);margin-top:6px}
+  .bars{margin-top:12px;display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:72px 1fr 38px;align-items:center;gap:10px;font-size:12px}
+  .bar .track{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+  .bar .fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0}
+
+  /* form */
+  .q{margin-bottom:20px}
+  .q .qno{color:var(--accent);font-weight:800;font-size:13px}
+  .q .qt{font-size:15px;font-weight:700;margin:2px 0 4px}
+  .q .ex{font-size:12px;color:var(--muted);margin-bottom:8px}
+  textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    color:var(--text);padding:11px 12px;font-size:14px;font-family:inherit;resize:vertical;min-height:64px}
+  textarea:focus{outline:none;border-color:var(--accent)}
+  input[type=text]{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    color:var(--text);padding:10px 12px;font-size:14px;font-family:inherit}
+  input[type=text]:focus{outline:none;border-color:var(--accent)}
+  .progress{font-size:13px;color:var(--muted);margin-bottom:16px}
+  .progress b{color:var(--accent2)}
+
+  .flow{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+    font-size:14px;color:var(--muted);margin:14px 0}
+  .flow b{color:var(--accent2)}
+  .arrow{text-align:center;color:var(--accent);font-size:13px;margin:4px 0}
+
+  .step-block{margin-bottom:28px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+  .step-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .step-head{font-size:15px;font-weight:700;margin-bottom:12px;color:var(--accent2)}
+  .step-note{font-size:13px;color:var(--muted);margin:-4px 0 14px;line-height:1.7}
+
+  /* STEP1: 〇〇歳：××（数字2桁 + 出来事） */
+  .timeline-entry{margin-bottom:14px}
+  .timeline-inline{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+  .timeline-inline input[type=text]{width:auto;flex:0 0 auto;background:var(--bg);border:1px solid var(--line);
+    border-radius:10px;color:var(--text);padding:10px 12px;font-size:14px;font-family:inherit}
+  .timeline-inline input:focus{outline:none;border-color:var(--accent)}
+  .timeline-inline .age-input{
+    width:3.4em;min-width:3.4em;max-width:3.4em;padding:10px 6px;text-align:center;
+    font-variant-numeric:tabular-nums;
+  }
+  .timeline-inline .ev-input{flex:1;min-width:140px}
+  .timeline-age-suffix{font-size:14px;font-weight:600;flex-shrink:0}
+  .timeline-sep{font-weight:700;color:var(--accent2);flex-shrink:0;margin:0 2px}
+
+  /* STEP2〜4: 項目： → 例 → 入力 */
+  .field-stack{margin-bottom:18px}
+  .field-stack-label{font-size:14px;font-weight:600;margin-bottom:6px}
+  .field-stack-label::after{content:"："}
+  .field-stack input[type=text], .field-stack textarea{
+    width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    color:var(--text);padding:10px 12px;font-size:14px;font-family:inherit;
+  }
+  .field-stack textarea{resize:vertical;min-height:72px}
+  .field-stack input[type=text]:focus, .field-stack textarea:focus{outline:none;border-color:var(--accent)}
+  .field-ex-line{font-size:11.5px;color:var(--muted);margin-bottom:6px;line-height:1.55}
+  .field-ex-line::before{content:"例：";color:var(--accent);font-weight:600}
+
+  .savehint{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}
+
+  /* final cta */
+  .final{text-align:center;
+    background:radial-gradient(120% 90% at 50% 0%, rgba(200,163,91,.16), transparent 60%);}
+  .final h2{font-size:24px;font-weight:800;margin-bottom:14px}
+  .final p{color:var(--muted);font-size:14px;max-width:480px;margin:0 auto 26px}
+  .line-btn{display:inline-block;background:#06c755;color:#fff;font-weight:800;text-decoration:none;
+    padding:16px 40px;border-radius:999px;font-size:16px;box-shadow:0 8px 24px rgba(6,199,85,.3);transition:.2s}
+  .line-btn:hover{transform:translateY(-2px)}
+
+  /* export */
+  .export-bar{text-align:center;padding:8px 0 40px}
+  .export-bar .savehint{margin-bottom:14px}
+  .pdf-btn{
+    display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#1a1500;font-weight:800;border:none;cursor:pointer;
+    padding:14px 28px;border-radius:999px;font-size:15px;
+    box-shadow:0 8px 24px rgba(200,163,91,.28);transition:.2s;
+  }
+  .pdf-btn:hover{transform:translateY(-2px)}
+  .pdf-btn:disabled{opacity:.55;cursor:wait;transform:none}
+
+  .hero-actions{display:flex;flex-direction:column;align-items:center;gap:12px}
+  .reset-btn{
+    display:inline-block;background:transparent;color:var(--muted);font-weight:600;
+    border:1px solid var(--line);cursor:pointer;padding:10px 22px;border-radius:999px;
+    font-size:13px;transition:.2s;
+  }
+  .reset-btn:hover{color:var(--text);border-color:var(--muted)}
+  .reset-bar{text-align:center;padding:0 0 48px}
+
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:36px 0}
+  @media(max-width:480px){
+    .hero h1{font-size:24px}
+    .scorebox input[type=range]{width:92px}
+    .timeline-inline .ev-input{min-width:100%}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">FOR PEOPLE WHO WANT TO BE INTERESTING</div>
+    <h1>「モテる男」ではなく<br><b>魅力的な人間</b>になる。</h1>
+    <p>あなたの人生経験は、そのまま“コンテンツ”になる。<br>
+       3つのワークで自分の魅力を発掘し、言語化する無料特典です。</p>
+    <div class="badges">
+      <span class="badge">① コンテンツ力診断</span>
+      <span class="badge">② 人生をコンテンツ化する質問集</span>
+      <span class="badge">③ コンテンツ力発掘ワーク</span>
+    </div>
+    <div class="hero-actions">
+      <a class="cta" href="#shindan">無料で診断をはじめる</a>
+      <button type="button" class="reset-btn" data-reset>入力をリセット</button>
+    </div>
+  </div>
+</header>
+
+<nav class="stepnav">
+  <a href="#shindan">① 診断</a>
+  <a href="#questions">② 質問集</a>
+  <a href="#worksheet">③ ワーク</a>
+  <a href="#export">PDF</a>
+  <a href="#cta">面談へ</a>
+</nav>
+
+<!-- 特典① 診断 -->
+<section id="shindan">
+  <div class="wrap">
+    <div class="card">
+      <h2 class="title">特典① <span>コンテンツ力診断シート</span></h2>
+      <p class="lead">各項目を 0〜10点 で自己採点してください。合計を100点満点に換算して診断します。</p>
+      <p class="savehint" id="saveStatusGlobal">入力内容はこの端末の localStorage に自動保存されます。</p>
+      <div id="cats"></div>
+    </div>
+    <div class="result">
+      <div class="top">
+        <div class="score" id="scoreVal">0<small>/100</small></div>
+        <div>
+          <div class="band" id="bandVal" style="color:var(--muted)">採点してください</div>
+          <div class="desc" id="bandDesc"></div>
+        </div>
+      </div>
+      <div class="bars" id="bars"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 特典② 質問集 -->
+<section id="questions">
+  <div class="wrap">
+    <div class="card">
+      <h2 class="title">特典② <span>人生をコンテンツ化する質問集</span></h2>
+      <p class="lead">思いつくままに書いてOK。あなたの言葉が、そのまま発信の素材になります。</p>
+      <div class="progress">回答済み <b id="qDone">0</b> / <span id="qTotal">0</span></div>
+      <div id="qContainer"></div>
+      <p class="savehint">入力は自動でこの端末に保存されます。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 特典③ ワークシート -->
+<section id="worksheet">
+  <div class="wrap">
+    <div class="card">
+      <h2 class="title">特典③ <span>コンテンツ力発掘ワークシート</span></h2>
+      <p class="lead">経験を「他人に話せるエピソード」へ変換していきます。</p>
+
+      <div id="worksheetSteps"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PDFダウンロード -->
+<section id="export" class="export-bar">
+  <div class="wrap">
+    <p class="savehint" id="saveStatus">保存状態を確認中…</p>
+    <button type="button" id="downloadPdf" class="pdf-btn">入力内容をPDFでダウンロード</button>
+  </div>
+</section>
+
+<!-- 面談CTA -->
+<section id="cta" class="final">
+  <div class="wrap">
+    <h2>あなたのエピソード、<br>発信にするとかなり強いです。</h2>
+    <p>書き出した内容をもとに、あなた専用の「コンテンツ軸」を一緒に整理しませんか？
+       LINEから無料の個別相談を受け付けています。</p>
+    <a class="line-btn" href="ここにLINE URLを入れる">LINEで無料相談する</a>
+  </div>
+</section>
+
+<section class="reset-bar">
+  <div class="wrap">
+    <button type="button" class="reset-btn" data-reset>入力をリセット</button>
+  </div>
+</section>
+
+<footer>© Content Power Worksheet</footer>
+
+<script>
+/* ===== 特典① 診断データ ===== */
+const CATS = [
+  { name:"人生経験", key:"life", items:[
+    "一人旅をしたことがある","海外に行ったことがある","挫折経験がある","本気で熱中した経験がある",
+    "人生を変える出会いがあった","修羅場を経験したことがある","恋愛で大失敗したことがある",
+    "人生の転機を語れる","人から変わっていると言われる","自分だけの価値観がある"]},
+  { name:"人間関係", key:"rel", items:[
+    "年単位で続いている友人がいる","異性の友達がいる","年上と話せる","年下と話せる",
+    "初対面でも会話が続く","他人に興味を持てる","人の話を深掘りできる","感謝できる人がいる",
+    "尊敬する人がいる","誰かに感謝される経験がある"]},
+  { name:"行動力", key:"act", items:[
+    "やりたいと思ったら行動する","知らない場所に行くことがある","新しい趣味を作ったことがある",
+    "学びにお金を使ったことがある","失敗を恐れず挑戦できる","環境を変えた経験がある",
+    "人生で勝負した経験がある","自分の意思で決断できる","他人のせいにしない","自分の人生に責任を持っている"]}
+];
+const STORE = "contentPowerLP";
+const data = JSON.parse(localStorage.getItem(STORE) || "{}");
+function save() {
+  data.savedAt = new Date().toISOString();
+  localStorage.setItem(STORE, JSON.stringify(data));
+  updateSaveStatus();
+}
+function updateSaveStatus() {
+  const targets = [document.getElementById("saveStatus"), document.getElementById("saveStatusGlobal")];
+  const text = data.savedAt
+    ? `自動保存済み（${new Date(data.savedAt).toLocaleString("ja-JP")}）`
+    : "入力内容はこの端末の localStorage に自動保存されます。";
+  targets.forEach(el => { if (el) el.textContent = text; });
+}
+
+function resetAllData() {
+  if (!confirm("入力内容をすべて削除します。よろしいですか？")) return;
+  localStorage.removeItem(STORE);
+  location.reload();
+}
+
+document.querySelectorAll("[data-reset]").forEach(btn => {
+  btn.addEventListener("click", resetAllData);
+});
+
+/* 診断描画 */
+const catsEl = document.getElementById("cats");
+CATS.forEach(cat=>{
+  const wrap=document.createElement("div"); wrap.className="cat";
+  wrap.innerHTML=`<h3>${cat.name}<span class="sub" id="sub_${cat.key}">0 / 100</span></h3>`;
+  cat.items.forEach((it,i)=>{
+    const id=`${cat.key}_${i}`;
+    const v=(data.shindan&&data.shindan[id])||0;
+    const row=document.createElement("div"); row.className="item";
+    row.innerHTML=`<label>${it}</label>
+      <div class="scorebox">
+        <input type="range" min="0" max="10" value="${v}" data-id="${id}" data-cat="${cat.key}">
+        <span class="val">${v}</span>
+      </div>`;
+    wrap.appendChild(row);
+  });
+  catsEl.appendChild(wrap);
+});
+
+function recalc(){
+  let total=0; data.shindan=data.shindan||{};
+  CATS.forEach(cat=>{
+    let c=0;
+    cat.items.forEach((_,i)=>{ c += data.shindan[`${cat.key}_${i}`]||0; });
+    total+=c;
+    const pct=Math.round(c/(cat.items.length*10)*100);
+    const sub=document.getElementById("sub_"+cat.key);
+    if(sub) sub.textContent = pct+" / 100";
+    const fill=document.getElementById("fill_"+cat.key);
+    if(fill) fill.style.width = pct+"%";
+    const bv=document.getElementById("barv_"+cat.key);
+    if(bv) bv.textContent = pct;
+  });
+  const score=Math.round(total/300*100);
+  document.getElementById("scoreVal").innerHTML = score+'<small>/100</small>';
+  let band="", desc="", col="";
+  if(score>=80){band="かなりコンテンツ力が高い";desc="あなたの経験は強力な武器。あとは言語化と発信だけ。";col="var(--good)";}
+  else if(score>=60){band="魅力の土台はある";desc="磨けば光る経験あり。質問集で掘り下げよう。";col="var(--accent2)";}
+  else if(score>=40){band="経験不足";desc="まずは行動量を増やしつつ、今ある経験を言語化。";col="var(--warn)";}
+  else if(total>0){band="まずは人生経験を増やそう";desc="小さな挑戦から。年表ワークで棚卸しを。";col="var(--bad)";}
+  else {band="採点してください";desc="";col="var(--muted)";}
+  const b=document.getElementById("bandVal"); b.textContent=band; b.style.color=col;
+  document.getElementById("bandDesc").textContent=desc;
+}
+
+/* カテゴリ別バー */
+const bars=document.getElementById("bars");
+CATS.forEach(cat=>{
+  const el=document.createElement("div"); el.className="bar";
+  el.innerHTML=`<span class="muted">${cat.name}</span>
+    <span class="track"><span class="fill" id="fill_${cat.key}"></span></span>
+    <span id="barv_${cat.key}"></span>`;
+  bars.appendChild(el);
+});
+
+document.querySelectorAll('input[type=range]').forEach(r=>{
+  r.addEventListener("input",e=>{
+    const id=e.target.dataset.id;
+    data.shindan=data.shindan||{}; data.shindan[id]=+e.target.value;
+    e.target.nextElementSibling.textContent=e.target.value;
+    recalc(); save();
+  });
+});
+
+/* ===== 特典② 質問集 ===== */
+const QUESTIONS = {
+  "過去編":[
+    {q:"人生で一番嬉しかったことは？"},{q:"人生で一番悔しかったことは？"},{q:"初恋はどんな人？"},
+    {q:"学生時代どんなキャラだった？"},{q:"一番仲が良かった友達は？"},{q:"親との関係は？"},
+    {q:"最も影響を受けた人は？"},{q:"一番辛かった失恋は？"},{q:"人生で一番勇気を出した瞬間は？"},
+    {q:"一番バカだったと思う経験は？"}],
+  "現在編":[
+    {q:"今ハマっていることは？"},{q:"休日は何してる？"},{q:"最近感動したことは？"},
+    {q:"最近腹が立ったことは？"},{q:"人生で大切にしている価値観は？"},{q:"どんな人と一緒にいたい？"},
+    {q:"友達から何と言われる？"},{q:"今後挑戦したいことは？"},{q:"最近成長を感じたことは？"},
+    {q:"何をしている時が幸せ？"}],
+  "深掘り編":[
+    {q:"なぜそう思うの？"},{q:"いつから？"},{q:"きっかけは？"},{q:"誰の影響？"},
+    {q:"その経験で何を学んだ？"},{q:"今振り返るとどう思う？"},{q:"その経験が今の自分にどう影響してる？"}]
+};
+const qc=document.getElementById("qContainer");
+let qTotal=0, n=0;
+data.answers=data.answers||{};
+for(const [sec,arr] of Object.entries(QUESTIONS)){
+  const h=document.createElement("h3");
+  h.textContent=sec; h.style.cssText="color:var(--accent2);margin:18px 0 10px;font-size:15px";
+  qc.appendChild(h);
+  arr.forEach(item=>{
+    n++; qTotal++;
+    const key="q_"+n;
+    const div=document.createElement("div"); div.className="q";
+    div.innerHTML=`<div class="qno">Q${n}</div><div class="qt">${item.q}</div>`;
+    const ta=document.createElement("textarea");
+    ta.dataset.key=key; ta.value=data.answers[key]||"";
+    ta.placeholder="あなたの答えを書いてみよう";
+    div.appendChild(ta); qc.appendChild(div);
+  });
+}
+document.getElementById("qTotal").textContent=qTotal;
+function countAnswers(){
+  let d=0;
+  for(let i=1;i<=qTotal;i++){ if((data.answers["q_"+i]||"").trim()) d++; }
+  document.getElementById("qDone").textContent=d;
+}
+
+/* ===== 特典③ ワーク ===== */
+const TIMELINE_EXAMPLES = [
+  { age: "18", ev: "大学入学" },
+  { age: "20", ev: "失恋" },
+  { age: "22", ev: "海外留学" },
+  { age: "24", ev: "転職" },
+  { age: "26", ev: "起業" },
+  { age: "28", ev: "独立" },
+];
+const TURNING_EXAMPLES = [
+  "大学受験に落ちて進路を変えた",
+  "初恋相手に振られた",
+  "初めて一人で海外旅行",
+  "仕事を辞めて環境を変えた",
+  "一人暮らしを始めた",
+];
+const STEP3_FIELDS = [
+  { key: "exp", label: "経験", multiline: true, ex: "大学時代にサークル代表を任された" },
+  { key: "learn", label: "学び", multiline: true, ex: "リーダーシップより相手の話を聞くことが大事" },
+  { key: "now", label: "今にどう活きているか", multiline: true, ex: "今は部下の意見を先に聞くようにしている" },
+];
+const STEP4_FIELDS = [
+  { key: "event", label: "出来事", multiline: true, ex: "韓国語を勉強した" },
+  { key: "emotion", label: "感情", multiline: true, ex: "言葉が通じず悔しかった" },
+  { key: "conflict", label: "葛藤", multiline: true, ex: "でも諦めなかった" },
+  { key: "learn", label: "学び", multiline: true, ex: "行動すれば人生は変わると知った" },
+  { key: "now", label: "現在", multiline: true, ex: "今は韓国に友人がいる" },
+];
+
+data.timeline = data.timeline || [];
+data.turning = data.turning || [];
+data.ws_step3 = data.ws_step3 || {};
+data.ws_step4 = data.ws_step4 || {};
+
+function escAttr(v) {
+  return String(v || "")
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;");
+}
+
+function normalizeAge(v) {
+  return String(v || "").replace(/\D/g, "").slice(0, 2);
+}
+
+function renderStackedField({ label, ex, multiline, value, dataset }) {
+  const attrs = Object.entries(dataset).map(([k, v]) => ` data-${k}="${escAttr(v)}"`).join("");
+  const input = multiline
+    ? `<textarea rows="3"${attrs}>${escAttr(value)}</textarea>`
+    : `<input type="text"${attrs} value="${escAttr(value)}">`;
+  return `<div class="field-stack">
+    <div class="field-stack-label">${label}</div>
+    <div class="field-ex-line">${ex}</div>
+    ${input}
+  </div>`;
+}
+
+function renderWorksheetSteps() {
+  const root = document.getElementById("worksheetSteps");
+  let html = "";
+
+  html += `<div class="step-block"><div class="step-head">STEP1 ｜ あなたの人生年表を作る</div>`;
+  TIMELINE_EXAMPLES.forEach((sample, i) => {
+    const t = data.timeline[i] || { age: "", ev: "" };
+    const ageVal = normalizeAge(t.age);
+    html += `<div class="timeline-entry">
+      <div class="field-ex-line">${escAttr(sample.age)}歳：${escAttr(sample.ev)}</div>
+      <div class="timeline-inline">
+        <input type="text" class="age-input" inputmode="numeric" maxlength="2" pattern="[0-9]*"
+          data-tl="${i}" data-f="age" value="${escAttr(ageVal)}" aria-label="年齢（数字2桁）">
+        <span class="timeline-age-suffix">歳</span>
+        <span class="timeline-sep">：</span>
+        <input type="text" class="ev-input" data-tl="${i}" data-f="ev" value="${escAttr(t.ev)}" aria-label="出来事">
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  html += `<div class="step-block"><div class="step-head">STEP2 ｜ 人生の転機を5つ選ぶ</div>`;
+  for (let i = 0; i < 5; i++) {
+    html += renderStackedField({
+      label: `転機${["①", "②", "③", "④", "⑤"][i]}`,
+      ex: TURNING_EXAMPLES[i],
+      multiline: true,
+      value: data.turning[i] || "",
+      dataset: { turn: i, ws: "turning" },
+    });
+  }
+  html += `</div>`;
+
+  html += `<div class="step-block"><div class="step-head">STEP3 ｜ その経験から学んだこと</div>`;
+  html += `<p class="step-note">STEP2の中から1番印象的なことを選んで考えてください。</p>`;
+  STEP3_FIELDS.forEach(f => {
+    html += renderStackedField({
+      label: f.label, ex: f.ex, multiline: f.multiline,
+      value: data.ws_step3[f.key] || "",
+      dataset: { ws: "step3", f: f.key },
+    });
+  });
+  html += `</div>`;
+
+  html += `<div class="step-block"><div class="step-head">STEP4 ｜ 他人に話せるエピソードへ変換</div>`;
+  STEP4_FIELDS.forEach(f => {
+    html += renderStackedField({
+      label: f.label, ex: f.ex, multiline: f.multiline,
+      value: data.ws_step4[f.key] || "",
+      dataset: { ws: "step4", f: f.key },
+    });
+  });
+  html += `</div>`;
+
+  html += `<div class="step-block"><div class="step-head">STEP5 ｜ コンテンツ力の本質</div>`;
+  html += `<div class="flow" style="text-align:center;margin-bottom:14px">
+    人生経験<div class="arrow">↓</div>
+    言語化<div class="arrow">↓</div>
+    価値観<div class="arrow">↓</div>
+    人間的魅力<div class="arrow">↓</div>
+    <b>モテ（＝惹きつける力）</b>
+  </div>`;
+  html += `<p class="muted" style="font-size:13px;line-height:1.8">
+    テクニックではなく、経験を言語化することで魅力は生まれます。<br>
+    ここまで書けたあなたは、すでに発信できる素材を持っています。
+  </p></div>`;
+
+  root.innerHTML = html;
+}
+renderWorksheetSteps();
+
+/* ===== 入力保存（全テキスト共通） ===== */
+document.addEventListener("input", e => {
+  const t = e.target;
+  if (t.dataset.key !== undefined && t.tagName === "TEXTAREA") {
+    if (t.dataset.key.startsWith("q_")) { data.answers[t.dataset.key] = t.value; countAnswers(); }
+    save();
+  }
+  if (t.dataset.tl !== undefined) {
+    const i = +t.dataset.tl;
+    data.timeline[i] = data.timeline[i] || {};
+    if (t.dataset.f === "age") {
+      const digits = normalizeAge(t.value);
+      if (t.value !== digits) t.value = digits;
+      data.timeline[i].age = digits;
+    } else {
+      data.timeline[i][t.dataset.f] = t.value;
+    }
+    save();
+  }
+  if (t.dataset.turn !== undefined) {
+    data.turning[+t.dataset.turn] = t.value;
+    save();
+  }
+  if (t.dataset.ws === "step3") {
+    data.ws_step3[t.dataset.f] = t.value;
+    save();
+  }
+  if (t.dataset.ws === "step4") {
+    data.ws_step4[t.dataset.f] = t.value;
+    save();
+  }
+});
+
+recalc(); countAnswers();
+updateSaveStatus();
+
+/* ===== PDF エクスポート ===== */
+function escHtml(v) {
+  return String(v ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+function displayText(v, fallback = "（未入力）") {
+  const s = String(v ?? "").trim();
+  return s ? escHtml(s).replace(/\n/g, "<br>") : `<span style="color:#999">${fallback}</span>`;
+}
+
+function getDiagnosisSummary() {
+  let total = 0;
+  data.shindan = data.shindan || {};
+  const cats = CATS.map(cat => {
+    let sum = 0;
+    cat.items.forEach((_, i) => { sum += data.shindan[`${cat.key}_${i}`] || 0; });
+    total += sum;
+    return { name: cat.name, pct: Math.round(sum / (cat.items.length * 10) * 100) };
+  });
+  const score = Math.round(total / 300 * 100);
+  let band = "採点してください";
+  if (score >= 80) band = "かなりコンテンツ力が高い";
+  else if (score >= 60) band = "魅力の土台はある";
+  else if (score >= 40) band = "経験不足";
+  else if (total > 0) band = "まずは人生経験を増やそう";
+  return { score, band, cats };
+}
+
+function buildPdfHtml() {
+  const diag = getDiagnosisSummary();
+  let html = `<div style="font-family:'Hiragino Sans','Yu Gothic UI',sans-serif;color:#111;line-height:1.7;font-size:13px;padding:24px;width:746px;box-sizing:border-box;background:#fff">
+    <h1 style="font-size:20px;margin:0 0 4px">コンテンツ力ワークシート</h1>
+    <p style="color:#666;margin:0 0 20px;font-size:12px">出力日時：${escHtml(new Date().toLocaleString("ja-JP"))}</p>`;
+
+  html += `<h2 style="font-size:16px;border-bottom:2px solid #c8a35b;padding-bottom:4px;margin:24px 0 12px">特典① コンテンツ力診断</h2>`;
+  html += `<p><strong>総合スコア：</strong>${diag.score} / 100　<strong>判定：</strong>${escHtml(diag.band)}</p>`;
+  diag.cats.forEach(c => {
+    html += `<p style="margin:4px 0"><strong>${escHtml(c.name)}：</strong>${c.pct} / 100</p>`;
+  });
+  CATS.forEach(cat => {
+    html += `<h3 style="font-size:14px;margin:16px 0 8px;color:#555">${escHtml(cat.name)}</h3><ul style="margin:0;padding-left:18px">`;
+    cat.items.forEach((it, i) => {
+      const v = (data.shindan && data.shindan[`${cat.key}_${i}`]) || 0;
+      html += `<li style="margin-bottom:4px">${escHtml(it)} … ${v}点</li>`;
+    });
+    html += `</ul>`;
+  });
+
+  html += `<h2 style="font-size:16px;border-bottom:2px solid #c8a35b;padding-bottom:4px;margin:28px 0 12px">特典② 人生をコンテンツ化する質問集</h2>`;
+  let qn = 0;
+  for (const [sec, arr] of Object.entries(QUESTIONS)) {
+    html += `<h3 style="font-size:14px;margin:16px 0 8px;color:#555">${escHtml(sec)}</h3>`;
+    arr.forEach(item => {
+      qn++;
+      const ans = (data.answers && data.answers[`q_${qn}`]) || "";
+      html += `<div style="margin-bottom:14px;padding:10px 12px;background:#f7f7f8;border-radius:8px">
+        <div style="font-weight:700;margin-bottom:4px">Q${qn}. ${escHtml(item.q)}</div>
+        <div>${displayText(ans)}</div>
+      </div>`;
+    });
+  }
+
+  html += `<h2 style="font-size:16px;border-bottom:2px solid #c8a35b;padding-bottom:4px;margin:28px 0 12px">特典③ コンテンツ力発掘ワーク</h2>`;
+  html += `<h3 style="font-size:14px;margin:16px 0 8px;color:#555">STEP1 人生年表</h3>`;
+  TIMELINE_EXAMPLES.forEach((_, i) => {
+    const t = data.timeline[i] || {};
+    const age = normalizeAge(t.age);
+    const ev = t.ev || "";
+    if (!age && !ev) return;
+    html += `<p style="margin:4px 0">${age ? escHtml(age) + "歳" : "（年齢未入力）"}：${displayText(ev, "（出来事未入力）")}</p>`;
+  });
+  html += `<h3 style="font-size:14px;margin:16px 0 8px;color:#555">STEP2 人生の転機（5つ）</h3>`;
+  for (let i = 0; i < 5; i++) {
+    html += `<div style="margin-bottom:10px"><strong>転機${["①","②","③","④","⑤"][i]}：</strong><br>${displayText(data.turning[i])}</div>`;
+  }
+  html += `<h3 style="font-size:14px;margin:16px 0 8px;color:#555">STEP3 学んだこと</h3>`;
+  STEP3_FIELDS.forEach(f => {
+    html += `<div style="margin-bottom:10px"><strong>${escHtml(f.label)}：</strong><br>${displayText(data.ws_step3[f.key])}</div>`;
+  });
+  html += `<h3 style="font-size:14px;margin:16px 0 8px;color:#555">STEP4 エピソード変換</h3>`;
+  STEP4_FIELDS.forEach(f => {
+    html += `<div style="margin-bottom:10px"><strong>${escHtml(f.label)}：</strong><br>${displayText(data.ws_step4[f.key])}</div>`;
+  });
+  html += `<h3 style="font-size:14px;margin:16px 0 8px;color:#555">STEP5 コンテンツ力の本質</h3>`;
+  html += `<p style="color:#666">人生経験 → 言語化 → 価値観 → 人間的魅力 → 惹きつける力</p>`;
+  html += `</div>`;
+  return html;
+}
+
+function createPdfRenderFrame() {
+  const iframe = document.createElement("iframe");
+  iframe.setAttribute("aria-hidden", "true");
+  iframe.style.cssText = "position:fixed;width:794px;height:0;border:0;opacity:0;pointer-events:none;left:0;top:0;";
+  document.body.appendChild(iframe);
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write(`<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><style>
+    *{box-sizing:border-box} body{margin:0;background:#fff;color:#111}
+  </style></head><body>${buildPdfHtml()}</body></html>`);
+  doc.close();
+  return { iframe, target: doc.body.firstElementChild };
+}
+
+async function downloadPdf() {
+  const btn = document.getElementById("downloadPdf");
+  if (!btn) return;
+  if (typeof html2canvas === "undefined" || typeof jspdf === "undefined") {
+    alert("PDFライブラリの読み込みに失敗しました。ページを再読み込みしてください。");
+    return;
+  }
+  const { jsPDF } = jspdf;
+  btn.disabled = true;
+  btn.textContent = "PDFを作成中…";
+  save();
+  const { iframe, target } = createPdfRenderFrame();
+  try {
+    await new Promise(r => setTimeout(r, 400));
+    const canvas = await html2canvas(target, {
+      scale: 2,
+      backgroundColor: "#ffffff",
+      useCORS: true,
+      logging: false,
+      width: 794,
+      windowWidth: 794,
+    });
+    if (!canvas.width || !canvas.height) throw new Error("canvas empty");
+
+    const imgData = canvas.toDataURL("image/jpeg", 0.92);
+    const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 10;
+    const contentWidth = pageWidth - margin * 2;
+    const imgHeight = (canvas.height * contentWidth) / canvas.width;
+    let heightLeft = imgHeight;
+    let y = margin;
+
+    pdf.addImage(imgData, "JPEG", margin, y, contentWidth, imgHeight);
+    heightLeft -= pageHeight - margin * 2;
+
+    while (heightLeft > 0) {
+      y = margin - (imgHeight - heightLeft);
+      pdf.addPage();
+      pdf.addImage(imgData, "JPEG", margin, y, contentWidth, imgHeight);
+      heightLeft -= pageHeight - margin * 2;
+    }
+
+    pdf.save(`content-power-${new Date().toISOString().slice(0, 10)}.pdf`);
+  } catch (err) {
+    console.error(err);
+    alert("PDFの作成に失敗しました。Chrome または Safari で、http:// 経由で開いて再試行してください。");
+  } finally {
+    iframe.remove();
+    btn.disabled = false;
+    btn.textContent = "入力内容をPDFでダウンロード";
+  }
+}
+
+document.getElementById("downloadPdf").addEventListener("click", downloadPdf);
+</script>
+</body>
+</html>
