@@ -39,6 +39,15 @@
   .lead{color:var(--muted);font-size:14px;margin-bottom:6px}
   .lead b{color:var(--accent2)}
 
+  .guide{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:12px;padding:16px 18px;margin:18px 0 4px;font-size:13.5px;line-height:1.85;color:var(--text)}
+  .guide .guide-title{display:block;font-weight:800;color:var(--accent2);letter-spacing:.04em;margin-bottom:10px}
+  .guide p{margin:0}
+  .guide p+p{margin-top:12px}
+  .guide b{color:var(--accent2)}
+  .guide .qa{color:var(--muted)}
+  .guide .qa b{color:var(--text)}
+
   .cat{margin:28px 0}
   .cat-name{font-size:15px;color:var(--accent2);font-weight:800;letter-spacing:.04em;
     border-left:3px solid var(--accent);padding-left:10px;margin-bottom:16px}
@@ -181,6 +190,11 @@
     <div class="card">
       <h2 class="title"><span>コンテンツ力</span>診断シート</h2>
       <p class="lead">各項目を <b>1（当てはまらない）〜 10（強く当てはまる）</b> で選んでください。</p>
+      <div class="guide">
+        <span class="guide-title">【回答の考え方】</span>
+        <p>確信的にyesなら10点<br>確信的にnoなら1点<br>として確信度で回答してください</p>
+        <p class="qa">たとえば、<br>Q. 一人旅をしたことがある<br>の質問に対して<br>A. 頻繁に行くしためらいはない<br>という回答なら<b>10点</b><br>A. 全く行かない<br>という回答なら<b>1点</b><br>です。</p>
+      </div>
       <div id="cats"></div>
       <div class="progress">回答済み <b id="answered">0</b> / 30</div>
       <div class="submit-wrap">
