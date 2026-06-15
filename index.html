@@ -24,23 +24,23 @@
   /* ===== hero ===== */
   .hero{padding:80px 0 40px;text-align:center;
     background:radial-gradient(120% 80% at 50% -10%, rgba(200,163,91,.16), transparent 60%);}
-  .eyebrow{color:var(--accent);font-size:12px;letter-spacing:.2em;font-weight:700;margin-bottom:14px}
-  .hero h1{font-size:30px;font-weight:800;line-height:1.45;margin-bottom:18px}
+  .eyebrow{color:var(--accent);font-size:13px;letter-spacing:.2em;font-weight:700;margin-bottom:14px}
+  .hero h1{font-size:34px;font-weight:800;line-height:1.45;margin-bottom:18px}
   .hero h1 b{color:var(--accent2)}
-  .hero p{color:var(--muted);font-size:15px;max-width:520px;margin:0 auto 26px}
-  .scroll-cue{color:var(--accent);font-size:13px;letter-spacing:.1em;animation:bob 1.8s ease-in-out infinite}
+  .hero p{color:var(--muted);font-size:17px;max-width:520px;margin:0 auto 26px}
+  .scroll-cue{color:var(--accent);font-size:14px;letter-spacing:.1em;animation:bob 1.8s ease-in-out infinite}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 
   /* ===== card / input ===== */
   section.input-sec{padding:32px 0 64px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:26px 20px}
-  h2.title{font-size:22px;font-weight:800;margin-bottom:6px}
+  h2.title{font-size:25px;font-weight:800;margin-bottom:6px}
   h2.title span{color:var(--accent)}
-  .lead{color:var(--muted);font-size:14px;margin-bottom:6px}
+  .lead{color:var(--muted);font-size:15.5px;margin-bottom:6px}
   .lead b{color:var(--accent2)}
 
   .guide{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--accent);
-    border-radius:12px;padding:16px 18px;margin:18px 0 4px;font-size:13.5px;line-height:1.85;color:var(--text)}
+    border-radius:12px;padding:16px 18px;margin:18px 0 4px;font-size:15px;line-height:1.85;color:var(--text)}
   .guide .guide-title{display:block;font-weight:800;color:var(--accent2);letter-spacing:.04em;margin-bottom:10px}
   .guide p{margin:0}
   .guide p+p{margin-top:12px}
@@ -49,11 +49,11 @@
   .guide .qa b{color:var(--text)}
 
   .cat{margin:28px 0}
-  .cat-name{font-size:15px;color:var(--accent2);font-weight:800;letter-spacing:.04em;
+  .cat-name{font-size:16.5px;color:var(--accent2);font-weight:800;letter-spacing:.04em;
     border-left:3px solid var(--accent);padding-left:10px;margin-bottom:16px}
   .item{padding:14px 0;border-bottom:1px dashed var(--line)}
   .item:last-child{border-bottom:none}
-  .item-label{font-size:14.5px;margin-bottom:10px}
+  .item-label{font-size:16.5px;margin-bottom:10px}
   .scale{display:flex;gap:4px}
   .dot{flex:1 1 0;min-width:0;aspect-ratio:1;border-radius:50%;
     border:1px solid var(--line);background:var(--panel2);color:var(--muted);
@@ -65,109 +65,112 @@
     color:#1a1500;border-color:var(--accent);font-weight:800;transform:scale(1.12)}
   .scale-ends{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:6px}
 
-  .progress{text-align:center;font-size:13px;color:var(--muted);margin:26px 0 14px}
-  .progress b{color:var(--accent2);font-size:16px}
+  .progress{text-align:center;font-size:14.5px;color:var(--muted);margin:26px 0 14px}
+  .progress b{color:var(--accent2);font-size:18px}
   .submit-wrap{text-align:center}
   .cta-btn{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));
     color:#1a1500;font-weight:800;border:none;cursor:pointer;padding:16px 44px;border-radius:999px;
-    font-size:16px;box-shadow:0 8px 24px rgba(200,163,91,.28);transition:.2s}
+    font-size:17.5px;box-shadow:0 8px 24px rgba(200,163,91,.28);transition:.2s}
   .cta-btn:hover{transform:translateY(-2px)}
   .cta-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
   .reset-input{display:inline-block;background:transparent;color:var(--muted);font-weight:600;
     border:1px solid var(--line);cursor:pointer;padding:10px 22px;border-radius:999px;
-    font-size:13px;margin-top:14px;transition:.2s}
+    font-size:14px;margin-top:14px;transition:.2s}
   .reset-input:hover{color:var(--text);border-color:var(--muted)}
 
   /* ===== result phase ===== */
   #resultPhase[hidden]{display:none}
 
-  /* スライド上部の目立つ見出し（点数＋タイトル / じんじんからのメッセージ） */
-  .slide-head{flex:0 0 auto;text-align:center;padding:36px 20px 22px;
+  /* スライド上部の目立つ見出し（点数＋タイトル / じんじんからのメッセージ）。
+     グループ内で position:sticky にして、本文スクロール中も常に上部に固定表示する */
+  .slide-head{position:sticky;top:0;z-index:10;text-align:center;padding:30px 20px 20px;
     border-bottom:1px solid var(--line);
-    background:radial-gradient(130% 160% at 50% -50%, rgba(200,163,91,.18), transparent 70%)}
+    background:radial-gradient(130% 160% at 50% -50%, rgba(200,163,91,.18), transparent 70%), var(--bg)}
   .sh-score{display:block;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
-  .sh-score b{font-size:48px;color:var(--accent2)}
-  .sh-score small{font-size:15px;color:var(--muted);margin-left:3px}
-  .sh-title{display:block;margin-top:10px;font-size:21px;font-weight:800;color:var(--accent2)}
-  .sh-jinjin{display:block;font-size:19px;font-weight:800;letter-spacing:.22em;color:var(--accent);padding:10px 0}
+  .sh-score b{font-size:54px;color:var(--accent2)}
+  .sh-score small{font-size:17px;color:var(--muted);margin-left:3px}
+  .sh-title{display:block;margin-top:10px;font-size:24px;font-weight:800;color:var(--accent2)}
+  .sh-jinjin{display:block;font-size:22px;font-weight:800;letter-spacing:.22em;color:var(--accent);padding:10px 0}
   .slide-content{flex:1 1 auto;display:flex;align-items:center;padding:40px 0}
 
   /* 結果はスクロールスナップで1画面ずつ切り替わるスライド形式 */
   html.snap{scroll-snap-type:y mandatory}
-  .rscreen,.final-screen{scroll-snap-align:start;scroll-snap-stop:always}
-  .rscreen{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+  .rscreen,.rslide,.final-screen{scroll-snap-align:start;scroll-snap-stop:always}
+  .rscreen,.rslide{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
   .score-screen{justify-content:center;text-align:center;padding:80px 0 56px}
+  /* 固定見出し＋本文スライドをまとめるグループ（見出しはこの範囲の間だけ sticky で残る） */
+  .slide-group{position:relative}
   .reveal{opacity:0;transform:translateY(34px);transition:opacity .7s ease,transform .7s ease;width:100%}
   .reveal.in{opacity:1;transform:none}
 
-  .big-score{font-size:88px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;
+  .big-score{font-size:96px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;
     color:var(--accent2)}
-  .big-score small{display:block;font-size:16px;color:var(--muted);font-weight:600;margin-top:8px;letter-spacing:.05em}
-  .big-title{font-size:28px;font-weight:800;margin:26px 0 8px}
-  .big-sub{font-size:13px;color:var(--muted);letter-spacing:.1em;margin-bottom:30px}
+  .big-score small{display:block;font-size:18px;color:var(--muted);font-weight:600;margin-top:8px;letter-spacing:.05em}
+  .big-title{font-size:32px;font-weight:800;margin:26px 0 8px}
+  .big-sub{font-size:14px;color:var(--muted);letter-spacing:.1em;margin-bottom:30px}
 
   .cat-detail{display:grid;gap:12px;max-width:420px;margin:0 auto 34px;text-align:left}
-  .cat-row{display:grid;grid-template-columns:80px 1fr 46px;align-items:center;gap:10px;font-size:13px}
+  .cat-row{display:grid;grid-template-columns:84px 1fr 50px;align-items:center;gap:10px;font-size:15px}
   .cat-row .track{display:block;height:8px;background:var(--line);border-radius:99px;overflow:hidden}
   .cat-row .fill{display:block;height:100%;width:0;border-radius:99px;
     background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 1s ease .2s}
   .cat-row .num{text-align:right;font-weight:700;color:var(--accent2);font-variant-numeric:tabular-nums}
-  .scroll-hint{color:var(--accent);font-size:13px;letter-spacing:.08em;animation:bob 1.8s ease-in-out infinite}
+  .scroll-hint{color:var(--accent);font-size:14px;letter-spacing:.08em;animation:bob 1.8s ease-in-out infinite}
 
-  .page-no{font-size:13px;font-weight:800;color:var(--accent);letter-spacing:.2em;margin-bottom:18px}
-  .comment-body{font-size:17px;line-height:2.0}
+  .page-no{font-size:14px;font-weight:800;color:var(--accent);letter-spacing:.2em;margin-bottom:18px}
+  .comment-body{font-size:19px;line-height:2.0}
   .comment-body p{margin-bottom:18px}
   .comment-body p:last-child{margin-bottom:0}
   .comment-body b{color:var(--accent2)}
   .comment-body ul{list-style:none;margin:18px 0;padding:0}
-  .comment-body li{position:relative;padding-left:22px;margin-bottom:10px;font-size:16px}
+  .comment-body li{position:relative;padding-left:22px;margin-bottom:10px;font-size:18px}
   .comment-body li::before{content:"";position:absolute;left:2px;top:.85em;width:7px;height:7px;
     border-radius:50%;background:var(--accent)}
-  .formula{font-size:24px;font-weight:800;color:var(--accent2);text-align:center;letter-spacing:.05em;
+  .formula{font-size:27px;font-weight:800;color:var(--accent2);text-align:center;letter-spacing:.05em;
     margin:20px 0!important}
   .chain{text-align:center;font-weight:700;color:var(--accent2);line-height:1.9}
 
-  .jinjin-screen .comment-body{border-left:2px solid var(--accent);padding-left:18px}
-  .jinjin-label{font-size:12px;letter-spacing:.22em;color:var(--accent);font-weight:700;margin-bottom:20px}
+  .jinjin-group .comment-body{border-left:2px solid var(--accent);padding-left:18px}
+  .jinjin-label{font-size:13px;letter-spacing:.22em;color:var(--accent);font-weight:700;margin-bottom:20px}
   .sign{text-align:right;color:var(--accent2);font-weight:700}
 
   /* ===== final / 面談 ===== */
   .final-screen{
     background:radial-gradient(120% 90% at 50% 0%, rgba(200,163,91,.16), transparent 60%);
     min-height:100vh;min-height:100dvh;padding:90px 0;display:flex;align-items:center;text-align:center}
-  .final-screen h2{font-size:25px;font-weight:800;line-height:1.5;margin-bottom:16px}
-  .final-screen .desc{color:var(--muted);font-size:14.5px;max-width:480px;margin:0 auto 30px}
+  .final-screen h2{font-size:28px;font-weight:800;line-height:1.5;margin-bottom:16px}
+  .final-screen .desc{color:var(--muted);font-size:16px;max-width:480px;margin:0 auto 30px}
   .line-btn{display:inline-block;background:#06c755;color:#fff;font-weight:800;text-decoration:none;
-    padding:17px 44px;border-radius:999px;font-size:16px;box-shadow:0 8px 24px rgba(6,199,85,.3);transition:.2s}
+    padding:17px 44px;border-radius:999px;font-size:17.5px;box-shadow:0 8px 24px rgba(6,199,85,.3);transition:.2s}
   .line-btn:hover{transform:translateY(-2px)}
 
-  .bonus-label{font-size:12px;letter-spacing:.22em;color:var(--accent);font-weight:700;margin:54px 0 18px}
+  .bonus-label{font-size:13px;letter-spacing:.22em;color:var(--accent);font-weight:700;margin:54px 0 18px}
   .bonus-grid{display:grid;gap:16px;text-align:left}
   .bonus-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 20px}
   .bonus-no{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));
-    color:#1a1500;font-weight:800;font-size:12px;padding:4px 12px;border-radius:999px;margin-bottom:12px}
-  .bonus-title{font-size:17px;font-weight:800;margin-bottom:12px}
+    color:#1a1500;font-weight:800;font-size:13px;padding:4px 12px;border-radius:999px;margin-bottom:12px}
+  .bonus-title{font-size:19px;font-weight:800;margin-bottom:12px}
   .bonus-card ul{list-style:none;margin:0 0 16px;padding:0}
-  .bonus-card li{position:relative;padding-left:18px;margin-bottom:7px;font-size:14px;color:var(--text)}
+  .bonus-card li{position:relative;padding-left:18px;margin-bottom:7px;font-size:15.5px;color:var(--text)}
   .bonus-card li::before{content:"・";position:absolute;left:0;color:var(--accent)}
-  .bonus-catch{font-size:18px;font-weight:800;line-height:1.75;color:var(--accent2);
+  .bonus-catch{font-size:20px;font-weight:800;line-height:1.75;color:var(--accent2);
     margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
   .bonus-catch b{
     background:linear-gradient(transparent 62%, rgba(200,163,91,.35) 62%);
     padding:0 2px;color:#fff}
-  @media(max-width:480px){ .bonus-catch{font-size:16.5px} }
+  @media(max-width:480px){ .bonus-catch{font-size:18px} }
 
   .restart{display:inline-block;background:transparent;color:var(--muted);font-weight:600;
     border:1px solid var(--line);cursor:pointer;padding:11px 26px;border-radius:999px;
-    font-size:13px;margin-top:48px;transition:.2s}
+    font-size:14px;margin-top:48px;transition:.2s}
   .restart:hover{color:var(--text);border-color:var(--muted)}
 
-  footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 0 50px}
+  footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 50px}
   @media(max-width:480px){
-    .hero h1{font-size:25px}
-    .big-score{font-size:68px}
-    .big-title{font-size:23px}
-    .comment-body{font-size:16px;line-height:1.95}
+    .hero h1{font-size:28px}
+    .big-score{font-size:76px}
+    .big-title{font-size:26px}
+    .comment-body{font-size:18px;line-height:1.95}
     .dot{font-size:10px}
   }
 </style>
@@ -192,8 +195,8 @@
       <p class="lead">各項目を <b>1（当てはまらない）〜 10（強く当てはまる）</b> で選んでください。</p>
       <div class="guide">
         <span class="guide-title">【回答の考え方】</span>
-        <p>確信的にyesなら10点<br>確信的にnoなら1点<br>として確信度で回答してください</p>
-        <p class="qa">たとえば、<br>Q. 一人旅をしたことがある<br>の質問に対して<br>A. 頻繁に行くしためらいはない<br>という回答なら<b>10点</b><br>A. 全く行かない<br>という回答なら<b>1点</b><br>です。</p>
+        <p>確信的にyesなら10点<br>確信的にnoなら1点<br>として確信度や頻度で回答してください</p>
+        <p class="qa">たとえば、<br>Q. 一人旅の経験がある<br>の質問に対して<br>A. 頻繁に行くしためらいはない<br>という回答なら<b>10点</b><br>A. 全く行かない<br>という回答なら<b>1点</b><br>です。</p>
       </div>
       <div id="cats"></div>
       <div class="progress">回答済み <b id="answered">0</b> / 30</div>
@@ -243,6 +246,7 @@
             <li>人生で一番悔しかったことは？</li>
             <li>初恋はどんな人？</li>
           </ul>
+          <p>などなど...</p>
           <p class="bonus-catch">あなたの何気ない日常を、<b>たった1分の思考で“モテるコンテンツ力”に昇華</b>させる質問集。</p>
         </div>
         <div class="bonus-card">
@@ -252,6 +256,7 @@
             <li>STEP1：あなたの人生年表を作る</li>
             <li>STEP2：人生の転機を5つ選ぶ</li>
           </ul>
+          <p>などなど...</p>
           <p class="bonus-catch">ワークをこなすだけで、<b>美女を魅了するあなたの潜在的なコンテンツ力を爆発</b>させるワークシート。</p>
         </div>
       </div>
@@ -267,7 +272,7 @@
 /* ===== 診断項目 ===== */
 const CATS = [
   { name:"人生経験", key:"life", items:[
-    "一人旅をしたことがある","海外に行ったことがある","挫折経験がある","本気で熱中した経験がある",
+    "一人旅の経験がある","海外に行った経験がある","挫折経験がある","本気で熱中した経験がある",
     "人生を変える出会いがあった","修羅場を経験したことがある","恋愛で大失敗したことがある",
     "人生の転機を語れる","人から変わっていると言われる","自分だけの価値観がある"]},
   { name:"人間関係", key:"rel", items:[
@@ -458,24 +463,30 @@ function renderResult(){
       <span class="num">${c.pct}</span>
     </div>`).join("");
 
-  document.getElementById("commentPages").innerHTML=band.pages.map((p)=>`
-    <section class="rscreen comment-screen">
+  document.getElementById("commentPages").innerHTML=`
+    <section class="slide-group comment-group">
       <div class="slide-head">
         <span class="sh-score"><b style="color:${band.tone}">${score}</b><small>/100</small></span>
         <span class="sh-title" style="color:${band.tone}">${band.title}</span>
       </div>
-      <div class="slide-content"><div class="wrap reveal">
-        <div class="comment-body">${p}</div>
-      </div></div>
-    </section>`).join("");
+      ${band.pages.map((p)=>`
+      <div class="rslide">
+        <div class="slide-content"><div class="wrap reveal">
+          <div class="comment-body">${p}</div>
+        </div></div>
+      </div>`).join("")}
+    </section>`;
 
-  document.getElementById("jinjinPages").innerHTML=JINJIN.map((p)=>`
-    <section class="rscreen jinjin-screen">
+  document.getElementById("jinjinPages").innerHTML=`
+    <section class="slide-group jinjin-group">
       <div class="slide-head"><span class="sh-jinjin">じんじんからのメッセージ</span></div>
-      <div class="slide-content"><div class="wrap reveal">
-        <div class="comment-body">${p}</div>
-      </div></div>
-    </section>`).join("");
+      ${JINJIN.map((p)=>`
+      <div class="rslide">
+        <div class="slide-content"><div class="wrap reveal">
+          <div class="comment-body">${p}</div>
+        </div></div>
+      </div>`).join("")}
+    </section>`;
 
   return score;
 }
@@ -497,7 +508,7 @@ function setupReveal(){
       }
     });
   },{ threshold:0.55 });
-  document.querySelectorAll("#resultPhase .rscreen, #resultPhase .final-screen").forEach(el=> io.observe(el));
+  document.querySelectorAll("#resultPhase .rscreen, #resultPhase .rslide, #resultPhase .final-screen").forEach(el=> io.observe(el));
 }
 
 /* スコアのカウントアップ */
