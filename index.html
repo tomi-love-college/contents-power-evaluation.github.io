@@ -83,14 +83,17 @@
 
   /* スライド上部の目立つ見出し（点数＋タイトル / じんじんからのメッセージ）。
      グループ内で position:sticky にして、本文スクロール中も常に上部に固定表示する */
-  .slide-head{position:sticky;top:0;z-index:10;text-align:center;padding:30px 20px 20px;
+  .slide-head{position:sticky;top:0;z-index:10;
+    display:flex;align-items:center;justify-content:center;
+    height:72px;padding:0 20px;box-sizing:border-box;text-align:center;
     border-bottom:1px solid var(--line);
     background:radial-gradient(130% 160% at 50% -50%, rgba(200,163,91,.18), transparent 70%), var(--bg)}
-  .sh-score{display:block;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
-  .sh-score b{font-size:54px;color:var(--accent2)}
-  .sh-score small{font-size:17px;color:var(--muted);margin-left:3px}
-  .sh-title{display:block;margin-top:10px;font-size:24px;font-weight:800;color:var(--accent2)}
-  .sh-jinjin{display:block;font-size:22px;font-weight:800;letter-spacing:.22em;color:var(--accent);padding:10px 0}
+  .sh-bar{display:block;font-size:22px;font-weight:800;line-height:1.45;padding:0;margin:0}
+  .comment-group .sh-bar{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .comment-group .sh-bar b{font-size:inherit;font-variant-numeric:tabular-nums}
+  .comment-group .sh-bar small{font-size:0.82em;color:var(--muted);margin:0 0.35em 0 0.1em;font-weight:600}
+  .comment-group .sh-bar .sh-bar-title{font-size:inherit;letter-spacing:.02em}
+  .jinjin-group .sh-bar{letter-spacing:.22em;color:var(--accent)}
   .slide-content{flex:1 1 auto;display:flex;align-items:center;padding:40px 0}
 
   /* 結果はスクロールスナップで1画面ずつ切り替わるスライド形式 */
@@ -172,6 +175,8 @@
     .big-title{font-size:26px}
     .comment-body{font-size:18px;line-height:1.95}
     .dot{font-size:10px}
+    .slide-head{height:64px}
+    .sh-bar{font-size:19px}
   }
 </style>
 </head>
@@ -466,8 +471,9 @@ function renderResult(){
   document.getElementById("commentPages").innerHTML=`
     <section class="slide-group comment-group">
       <div class="slide-head">
-        <span class="sh-score"><b style="color:${band.tone}">${score}</b><small>/100</small></span>
-        <span class="sh-title" style="color:${band.tone}">${band.title}</span>
+        <span class="sh-bar">
+          <b style="color:${band.tone}">${score}</b><small>/100</small><span class="sh-bar-title" style="color:${band.tone}">${band.title}</span>
+        </span>
       </div>
       ${band.pages.map((p)=>`
       <div class="rslide">
@@ -479,7 +485,7 @@ function renderResult(){
 
   document.getElementById("jinjinPages").innerHTML=`
     <section class="slide-group jinjin-group">
-      <div class="slide-head"><span class="sh-jinjin">じんじんからのメッセージ</span></div>
+      <div class="slide-head"><span class="sh-bar">じんじんからのメッセージ</span></div>
       ${JINJIN.map((p)=>`
       <div class="rslide">
         <div class="slide-content"><div class="wrap reveal">
@@ -496,18 +502,20 @@ let io;
 function setupReveal(){
   if(io) io.disconnect();
   io=new IntersectionObserver((entries)=>{
+    const vh=window.innerHeight||document.documentElement.clientHeight;
     entries.forEach(en=>{
       const rev=en.target.querySelector(".reveal");
       if(!rev) return;
-      if(en.isIntersecting){
-        // スライドが画面中央に来たら文言を表示
-        rev.classList.add("in");
+      // 要素自身の55%、または画面の50%以上を覆っていれば表示。
+      // （面談画面のように画面より背が高い要素でも反応するようビューポート比で判定する）
+      const coverage=en.intersectionRect.height/vh;
+      const visible=en.isIntersecting && (en.intersectionRatio>=0.55 || coverage>=0.5);
+      rev.classList.toggle("in", visible);
+      if(visible){
         rev.querySelectorAll(".fill[data-pct]").forEach(f=>{ f.style.width=f.dataset.pct+"%"; });
-      } else {
-        rev.classList.remove("in");
       }
     });
-  },{ threshold:0.55 });
+  },{ threshold:[0,0.1,0.2,0.3,0.4,0.5,0.55,0.7,0.85,1] });
   document.querySelectorAll("#resultPhase .rscreen, #resultPhase .rslide, #resultPhase .final-screen").forEach(el=> io.observe(el));
 }
 
