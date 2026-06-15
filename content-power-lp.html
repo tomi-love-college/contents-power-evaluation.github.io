@@ -64,6 +64,10 @@
     font-size:16px;box-shadow:0 8px 24px rgba(200,163,91,.28);transition:.2s}
   .cta-btn:hover{transform:translateY(-2px)}
   .cta-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+  .reset-input{display:inline-block;background:transparent;color:var(--muted);font-weight:600;
+    border:1px solid var(--line);cursor:pointer;padding:10px 22px;border-radius:999px;
+    font-size:13px;margin-top:14px;transition:.2s}
+  .reset-input:hover{color:var(--text);border-color:var(--muted)}
 
   /* ===== result phase ===== */
   #resultPhase[hidden]{display:none}
@@ -95,8 +99,8 @@
 
   .cat-detail{display:grid;gap:12px;max-width:420px;margin:0 auto 34px;text-align:left}
   .cat-row{display:grid;grid-template-columns:80px 1fr 46px;align-items:center;gap:10px;font-size:13px}
-  .cat-row .track{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
-  .cat-row .fill{height:100%;width:0;border-radius:99px;
+  .cat-row .track{display:block;height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+  .cat-row .fill{display:block;height:100%;width:0;border-radius:99px;
     background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 1s ease .2s}
   .cat-row .num{text-align:right;font-weight:700;color:var(--accent2);font-variant-numeric:tabular-nums}
   .scroll-hint{color:var(--accent);font-size:13px;letter-spacing:.08em;animation:bob 1.8s ease-in-out infinite}
@@ -114,7 +118,7 @@
     margin:20px 0!important}
   .chain{text-align:center;font-weight:700;color:var(--accent2);line-height:1.9}
 
-  .jinjin-screen .reveal{border-left:2px solid var(--accent);padding-left:22px}
+  .jinjin-screen .comment-body{border-left:2px solid var(--accent);padding-left:18px}
   .jinjin-label{font-size:12px;letter-spacing:.22em;color:var(--accent);font-weight:700;margin-bottom:20px}
   .sign{text-align:right;color:var(--accent2);font-weight:700}
 
@@ -181,6 +185,7 @@
       <div class="progress">回答済み <b id="answered">0</b> / 30</div>
       <div class="submit-wrap">
         <button id="seeResult" class="cta-btn">結果を見る</button>
+        <div><button type="button" id="resetInput" class="reset-input">入力をリセット</button></div>
       </div>
     </div>
   </div>
@@ -266,85 +271,85 @@ const MAX_PER_ITEM = 10;
 /* ===== 結果コンテンツ（content-power-analysis.md より） ===== */
 const BANDS = [
   { min:0, max:20, title:"まずは自分の人生を生きよう", tone:"var(--bad)", pages:[
-    `<p>あなたに魅力がないのではなく、<b>“現時点では”人生経験の総量が不足している</b>かもしれません。</p>
+    `<p>あなたに魅力がないのではなく、<br><b>“現時点では”人生経験の総量が不足している</b>かもしれません。</p>
      <p>休日の過ごし方を聞かれても答えられない。<br>夢中になった経験も語れない。<br>人間関係も限られている。</p>
      <p>もしかして、こんな状況だったりしませんか…？</p>`,
-    `<p>これでは女性から興味を持たれる以前に、人としての輪郭が見えにくく、あなたが何者なのかが伝わらない状態です。</p>
+    `<p>これでは女性から興味を持たれる以前に、<br>人としての輪郭が見えにくく、<br>あなたが何者なのかが伝わらない状態です。</p>
      <p>まずはモテを考える前に、</p>
      <ul><li>新しい場所へ行く</li><li>新しい人と会う</li><li>新しいことに挑戦する</li></ul>
      <p>この3つを意識してください。</p>`,
-    `<p>あなたに必要なのは恋愛のテクニックではなく、<b>新たな人生経験</b>です。</p>
-     <p>ただ、逆に言えば伸び代しかないので、<b>変化幅が一番大きく美味しいポジション</b>です！</p>`
+    `<p>あなたに必要なのは恋愛のテクニックではなく、<br><b>新たな人生経験</b>です。</p>
+     <p>ただ、逆に言えば伸び代しかないので、<br><b>変化幅が一番大きく美味しいポジション</b>です！</p>`
   ]},
   { min:21, max:40, title:"受け身人生の男", tone:"var(--warn)", pages:[
     `<p>仕事と家の往復。<br>休日はSNSやYouTubeを見て終わる。<br>趣味も消費型が中心。</p>
      <p>そんな生活になっていませんか？</p>`,
-    `<p>恋愛面で言えば、頑張ればそこそこの女の子とはアポが組める状態。</p>
-     <p>界隈の発信を見て外見改善を頑張ろうとしている方も、この層に多そうですね！</p>
+    `<p>恋愛面で言えば、<br>頑張ればそこそこの女の子とはアポが組める状態。</p>
+     <p>界隈の発信を見て外見改善を頑張ろうとしている方も、<br>この層に多そうですね！</p>
      <p>人生に問題があるわけではありません。<br>しかし、<b>自ら何かに飛び込んだ経験が少ない</b>状態です。</p>`,
     `<p>コンテンツ力とは情報量ではありません。<br><b>体験の量</b>です。</p>
      <p>まずは、</p>
      <ul><li>コミュニティに参加する</li><li>一人旅をする</li><li>新しい趣味を始める</li></ul>
-     <p>など、自分から自分の人生に介入する経験を増やしましょう。</p>
-     <p>伸び代めっちゃあるので、今後に期待してください！</p>`
+     <p>など、<br>自分から自分の人生に介入する経験を増やしましょう。</p>
+     <p>伸び代めっちゃあるので、<br>今後に期待してください！</p>`
   ]},
   { min:41, max:60, title:"土台だけある、惜しい男", tone:"var(--accent2)", pages:[
     `<p>この層が最も多いはず！</p>
-     <p>旅行経験、恋愛経験など平均的な水準には達していて、仕事もぼちぼち良い感じ。</p>
+     <p>旅行経験、恋愛経験など平均的な水準には達していて、<br>仕事もぼちぼち良い感じ。</p>
      <p>しかし、その経験を<b>言語化したり、思想として落とし込めてはいない</b>状態。</p>
-     <p>恋愛面ではまさに「そこそこの子は口説けるが、美女には全く歯が立たない」状態ではないでしょうか！</p>`,
+     <p>恋愛面ではまさに<br>「そこそこの子は口説けるが、美女には全く歯が立たない」<br>状態ではないでしょうか！</p>`,
     `<p>コンテンツ力とは、</p>
      <p class="formula">経験 × 解釈</p>
      <p>です。</p>
      <p>例えば同じ旅行をしても「楽しかったな」で終わる人と、</p>
      <ul><li>どんなことが楽しかったのか</li><li>なぜそこに行ったのか</li><li>どんな学びや気付きがあったのか</li></ul>
-     <p>まで考える人では、その旅行の価値が大きく変わります。</p>`,
+     <p>まで考える人では、<br>その旅行の価値が大きく変わります。</p>`,
     `<p>今後は経験を増やすだけでなく、</p>
      <ul><li>振り返る</li><li>考える</li><li>言葉にする</li></ul>
      <p>ことを意識してみてください。</p>
-     <p>自分なりの解釈を人に伝えられるようになると、見える世界が変わってきます。</p>
-     <p>ここを超えられると、隣にいる女性のレベルもグンと上がるはず！</p>`
+     <p>自分なりの解釈を人に伝えられるようになると、<br>見える世界が変わってきます。</p>
+     <p>ここを超えられると、<br>隣にいる女性のレベルもグンと上がるはず！</p>`
   ]},
   { min:61, max:80, title:"ちょっとおもろい男", tone:"var(--info)", pages:[
     `<p>あなたには<b>人として興味を持たれる土台</b>があります。</p>
-     <p>異性からも同性からも、「もっと話を聞いてみたい」と思われることが増えているはず！</p>`,
-    `<p>恋愛面だと、美女とも関係は作れるけれど</p>
+     <p>異性からも同性からも、<br>「もっと話を聞いてみたい」と思われることが増えているはず！</p>`,
+    `<p>恋愛面だと、<br>美女とも関係は作れるけれど</p>
      <ul><li>付き合う直前で終わる</li><li>友達以上恋人未満になる</li><li>なぜか本命に選ばれない</li></ul>
      <p>そんな経験が増えているかもしれません。</p>
-     <p>このフェーズでは、陥りやすい落とし穴があります。</p>`,
+     <p>このフェーズでは、<br>陥りやすい落とし穴があります。</p>`,
     `<p>それは、<b>“経験を積むこと”が目的になる</b>ことです。</p>
-     <p>旅行の数、抱いた人数、稼いだ金額。<br>こうした数字を追い始めると、コンテンツ力は逆に薄まります。</p>
-     <p>大切なのは量ではなく<b>密度</b>です。<br>一つ一つの経験から何を感じ、何を学んだのか。そこに価値があります。</p>
-     <p>新しいことに手を出すのではなく、今ある手札の中から最強の一枚を選んで研ぎ澄ますといいかもしれません。</p>
-     <p>ほんの少し世界の見方と視点を変えるだけで、美女の隣に釣り合う男になれるはず！</p>`
+     <p>旅行の数、抱いた人数、稼いだ金額。<br>こうした数字を追い始めると、<br>コンテンツ力は逆に薄まります。</p>
+     <p>大切なのは量ではなく<b>密度</b>です。<br>一つ一つの経験から何を感じ、<br>何を学んだのか。<br>そこに価値があります。</p>
+     <p>新しいことに手を出すのではなく、<br>今ある手札の中から最強の一枚を選んで研ぎ澄ますといいかもしれません。</p>
+     <p>ほんの少し世界の見方と視点を変えるだけで、<br>美女の隣に釣り合う男になれるはず！</p>`
   ]},
   { min:81, max:100, title:"コンテンツ化された男", tone:"var(--good)", pages:[
     `<p>あなたは既に<b>人生そのものがコンテンツ</b>になっています。</p>
      <p>何をしたかだけでなく、</p>
      <ul><li>なぜそう感じたのか</li><li>なぜその選択をしたのか</li></ul>
      <p>そういった背景まで“自らの言葉で”語れる状態じゃないでしょうか…？</p>`,
-    `<p>恋愛においても、テクニックではなく人間性で選ばれることが増えているでしょう。</p>
-     <p>この界隈で出来ることは夜職攻略くらいしか手応えがない方も、この層には多いはず。</p>
+    `<p>恋愛においても、<br>テクニックではなく人間性で選ばれることが増えているでしょう。</p>
+     <p>この界隈で出来ることは夜職攻略くらいしか手応えがない方も、<br>この層には多いはず。</p>
      <p>しかし安心してはいけません。</p>
-     <p><b>コンテンツ力は貯金ではなく筋肉</b>です。<br>使わなければ衰えます。挑戦をやめた瞬間に成長は止まります。</p>
+     <p><b>コンテンツ力は貯金ではなく筋肉</b>です。<br>使わなければ衰えます。<br>挑戦をやめた瞬間に成長は止まります。</p>
      <p>これからも自分の人生に介入し続けてください。</p>`,
     `<p>コンテンツ力を伸ばす公式</p>
      <p class="formula">経験 × 解釈 × 発信</p>
      <p class="chain">経験する<br>↓<br>考える<br>↓<br>言語化する<br>↓<br>発信する</p>
-     <p>このサイクルを回した人間だけが、男女問わず“人として”興味を持たれる存在になります。</p>`
+     <p>このサイクルを回した人間だけが、<br>男女問わず“人として”興味を持たれる存在になります。</p>`
   ]}
 ];
 
 const JINJIN = [
-  `<p>モテる人とモテない人の差は、顔でも年収でもなく<b>“自らの人生への介入量”</b>です。</p>
+  `<p>モテる人とモテない人の差は、<br>顔でも年収でもなく<b>“自らの人生への介入量”</b>です。</p>
    <p>人は、“面白い人生を歩んでいる人”に惹かれるのではありません。<br><b>“自分の人生を面白がっている人”</b>に惹かれます。</p>
-   <p>その考え方や生き方自体が、人を惹きつけるのです。</p>`,
+   <p>その考え方や生き方自体が、<br>人を惹きつけるのです。</p>`,
   `<p>経験。思想。価値観。歴史。<br>つまり「コンテンツ力」ですね。</p>
-   <p>あなたはこれから先の人生で、何を経験し、何を感じ、どんな歴史を作っていきますか？</p>
-   <p>その積み重ねこそが、あなたという人間の魅力となります。</p>`,
+   <p>あなたはこれから先の人生で、<br>何を経験し、何を感じ、<br>どんな歴史を作っていきますか？</p>
+   <p>その積み重ねこそが、<br>あなたという人間の魅力となります。</p>`,
   `<p>人生はコンテンツです。<br>そしてコンテンツは作るものではありません。<b>生きた結果として残るもの</b>です。</p>
    <p>だから、新しい経験をしてみてください。<br>考えてみてください。<br>言葉にしてみてください。<br>そして誰かに伝えてみてください。</p>
-   <p>その繰り返しが、あなたという人間を唯一無二にしていきます。</p>
+   <p>その繰り返しが、<br>あなたという人間を唯一無二にしていきます。</p>
    <p class="sign">— じんじん</p>`
 ];
 
@@ -395,6 +400,16 @@ catsEl.addEventListener("click", e=>{
 });
 updateProgress();
 
+/* ===== 入力リセット ===== */
+document.getElementById("resetInput").addEventListener("click", ()=>{
+  if(!confirm("入力した点数をすべてリセットします。よろしいですか？")) return;
+  data.scores={};
+  save();
+  catsEl.querySelectorAll(".dot.selected").forEach(d=> d.classList.remove("selected"));
+  updateProgress();
+  document.getElementById("hero").scrollIntoView({behavior:"smooth"});
+});
+
 /* ===== スコア計算 ===== */
 function computeScore(){
   let total=0;
@@ -425,18 +440,17 @@ function renderResult(){
   document.getElementById("catDetail").innerHTML=cats.map(c=>`
     <div class="cat-row">
       <span class="muted">${c.name}</span>
-      <span class="track"><span class="fill" data-pct="${c.pct}"></span></span>
+      <span class="track"><span class="fill" data-pct="${c.pct}" style="width:${c.pct}%"></span></span>
       <span class="num">${c.pct}</span>
     </div>`).join("");
 
-  document.getElementById("commentPages").innerHTML=band.pages.map((p,i)=>`
+  document.getElementById("commentPages").innerHTML=band.pages.map((p)=>`
     <section class="rscreen comment-screen">
       <div class="slide-head">
         <span class="sh-score"><b style="color:${band.tone}">${score}</b><small>/100</small></span>
         <span class="sh-title" style="color:${band.tone}">${band.title}</span>
       </div>
       <div class="slide-content"><div class="wrap reveal">
-        <div class="page-no">0${i+1}</div>
         <div class="comment-body">${p}</div>
       </div></div>
     </section>`).join("");
@@ -500,6 +514,10 @@ document.getElementById("seeResult").addEventListener("click", ()=>{
   window.scrollTo(0,0);
   setupReveal();
   countUp(score);
+  // スコア画面のカテゴリゲージを確実に伸ばす（表示直後にアニメーション）
+  requestAnimationFrame(()=> requestAnimationFrame(()=>{
+    document.querySelectorAll("#catDetail .fill[data-pct]").forEach(f=>{ f.style.width=f.dataset.pct+"%"; });
+  }));
 });
 
 /* ===== もう一度診断 ===== */
