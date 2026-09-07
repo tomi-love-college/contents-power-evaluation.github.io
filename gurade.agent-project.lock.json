@@ -1,0 +1,35 @@
+{
+  "format": "gurade.agent-project-lock",
+  "schemaVersion": 1,
+  "repositoryId": "external.contents-power-evaluation",
+  "plugins": [
+    {
+      "id": "gurade.development",
+      "source": {
+        "kind": "vendored",
+        "path": "vendor/agent-plugins/development"
+      },
+      "requiredComponents": {
+        "skills": [
+          "commit",
+          "handoff",
+          "issue",
+          "pr",
+          "rehydrate",
+          "review-pr"
+        ],
+        "mcpServers": []
+      },
+      "manifestName": "gurade-development",
+      "contentManifestDigest": "sha256:4097a4e9d75a082e63b96f10ded8b9e579c3396c1f1149a26d3a214c7f4c21f2",
+      "version": "0.1.0"
+    }
+  ],
+  "adapters": [
+    {
+      "id": "portable-to-native",
+      "version": "0.1.0",
+      "artifactDigest": "sha256:1bb776c228bd3a04e7cc97654d48273bb4d8f8f6d319ac213053b1410a922a1d"
+    }
+  ]
+}
