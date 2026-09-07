@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "gurade-development",
+  "version": "0.1.0",
+  "description": "公開可能な開発ワークフロー。コミット、PR、Issue、引き継ぎ、レビュー対応。会社の可変データ・認証・プロダクト固有アーキテクチャは含まない。",
+  "author": {
+    "name": "株式会社ぐらで"
+  },
+  "keywords": [
+    "development",
+    "git",
+    "review"
+  ]
+}

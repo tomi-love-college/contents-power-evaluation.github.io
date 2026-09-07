@@ -1,0 +1,35 @@
+{
+  "format": "gurade.agent-project",
+  "schemaVersion": 1,
+  "repositoryId": "external.contents-power-evaluation",
+  "plugins": [
+    {
+      "id": "gurade.development",
+      "source": {
+        "kind": "vendored",
+        "path": "vendor/agent-plugins/development"
+      },
+      "requiredComponents": {
+        "skills": [
+          "commit",
+          "handoff",
+          "issue",
+          "pr",
+          "rehydrate",
+          "review-pr"
+        ],
+        "mcpServers": []
+      }
+    }
+  ],
+  "requestedCapabilities": [
+    "repository.read",
+    "repository.patch",
+    "github.issue",
+    "github.pull_request"
+  ],
+  "adapterPolicy": {
+    "onUnsupportedRequiredComponent": "fail",
+    "editGlobalSettings": false
+  }
+}
