@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Verify this repo's Agent Plugin settings. No parent-workspace path required."""
+"""Verify this repo's Agent Plugin lock. Canonical copy: agent-platform/tools/repo-check.py
+
+Do not independently rewrite this file in each repo. Update the canonical file, then
+copy it with `python tools/sync-repo-check.py DEST_REPO`. Lock files are never
+regenerated here; digest changes are a reviewable `make_lock` diff.
+"""
 from __future__ import annotations
 
 import json
@@ -18,6 +23,8 @@ MANIFEST_FIELDS = {
     "keywords",
     "extensions",
 }
+
+SOURCE = "products/agent-platform/tools/repo-check.py"
 
 
 def repo_root(start: Path) -> Path:
@@ -82,29 +89,66 @@ def main() -> int:
     lock_path = root / "gurade.agent-project.lock.json"
     plugins = [check_plugin(root, item) for item in project["plugins"]]
     missing = [item["id"] for item in plugins if item["missingSkills"]]
+    structure_valid = not missing and lock_path.is_file()
     result = {
-        "valid": not missing and lock_path.is_file(),
+        "structureValid": structure_valid,
+        "valid": False,
+        "complete": False,
         "repositoryId": project.get("repositoryId"),
         "parentWorkspaceRequired": False,
         "plugins": plugins,
         "lockPresent": lock_path.is_file(),
         "authentication": "not_required",
         "nativeProbe": "not_run",
-        "toolchain": "skipped_until_lock",
-        "note": "Capabilities are requests, not grants. This check does not call the network.",
+        "toolchain": "unavailable",
+        "lockVerification": "not_run",
+        "canonicalCheck": SOURCE,
+        "note": (
+            "Capabilities are requests, not grants. This check does not call the network. "
+            "Install gurade-agent-platform (or set PYTHONPATH to its src) for complete lock verification. "
+            "Never regenerate a lock from this command; use make_lock and review the diff."
+        ),
     }
-    if lock_path.is_file():
-        lock = load_object(lock_path)
-        if lock.get("repositoryId") != project.get("repositoryId"):
-            result["valid"] = False
-            result["error"] = "lock_repository_mismatch"
-        else:
-            result["toolchain"] = try_verify_lock(root)
     if missing:
         result["valid"] = False
         result["error"] = "required_skill_missing"
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 1
+    if not lock_path.is_file():
+        result["valid"] = False
+        result["error"] = "lock_missing"
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 1
+    lock = load_object(lock_path)
+    if lock.get("repositoryId") != project.get("repositoryId"):
+        result["valid"] = False
+        result["error"] = "lock_repository_mismatch"
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 1
+    toolchain = try_verify_lock(root)
+    result["toolchain"] = toolchain
+    result["lockVerification"] = toolchain
+    if toolchain == "verify_lock_failed":
+        result["valid"] = False
+        result["complete"] = False
+        result["error"] = "lock_verification_failed"
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 1
+    if toolchain == "unavailable":
+        result["valid"] = structure_valid
+        result["complete"] = False
+        result["verification"] = "incomplete_toolchain_unavailable"
+        result["note"] = (
+            "Structure check passed. Complete lock/adapter pin verification was not run "
+            "because agent_platform is not installed. "
+            "pip install -e <agent-platform> or PYTHONPATH=<agent-platform>/src python tools/agent-setup/check.py"
+        )
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 0
+    result["valid"] = True
+    result["complete"] = True
     print(json.dumps(result, ensure_ascii=False, indent=2))
-    return 0 if result["valid"] else 1
+    return 0
 
 
 if __name__ == "__main__":
